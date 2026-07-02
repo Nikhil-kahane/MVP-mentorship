@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ course.title }} - MentorHub{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/" class="text-decoration-none">Home</a></li>
+            <li class="breadcrumb-item"><a href="/courses/" class="text-decoration-none">Courses</a></li>
+            <li class="breadcrumb-item active">{{ course.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        <!-- Main Content -->
+        <div class="col-lg-8">
+            {% if course.thumbnail %}
+                <img src="{{ course.thumbnail.url }}" class="img-fluid rounded-3 mb-4 w-100" alt="{{ course.title }}" style="max-height:380px;object-fit:cover;">
+            {% else %}
+                <div class="bg-primary rounded-3 mb-4 d-flex align-items-center justify-content-center" style="height:280px;">
+                    <i class="bi bi-book-half text-white" style="font-size:5rem;"></i>
+                </div>
+            {% endif %}
+
+            <span class="badge bg-primary-subtle text-primary mb-3">{{ course.get_category_display }}</span>
+            <h1 class="fw-bold mb-3">{{ course.title }}</h1>
+            <p class="text-muted mb-4" style="line-height:1.8;">{{ course.description }}</p>
+
+            <div class="row g-3 mb-4">
+                <div class="col-sm-4">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-clock text-primary fs-5"></i>
+                        <div>
+                            <p class="mb-0 small text-muted">Duration</p>
+                            <p class="mb-0 fw-semibold">{{ course.duration }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-tag text-primary fs-5"></i>
+                        <div>
+                            <p class="mb-0 small text-muted">Category</p>
+                            <p class="mb-0 fw-semibold">{{ course.get_category_display }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-calendar3 text-primary fs-5"></i>
+                        <div>
+                            <p class="mb-0 small text-muted">Added</p>
+                            <p class="mb-0 fw-semibold">{{ course.created_at|date:"M d, Y" }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Mentor Card -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-transparent border-bottom py-3">
+                    <h5 class="fw-semibold mb-0">Your Mentor</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        {% if course.mentor.user.profile_image %}
+                            <img src="{{ course.mentor.user.profile_image.url }}" class="rounded-circle" width="56" height="56" style="object-fit:cover;">
+                        {% else %}
+                            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center text-white fw-bold" style="width:56px;height:56px;font-size:1.3rem;">
+                                {{ course.mentor.user.first_name.0|upper|default:course.mentor.user.username.0|upper }}
+                            </div>
+                        {% endif %}
+                        <div>
+                            <h6 class="fw-semibold mb-0">{{ course.mentor.user.get_full_name|default:course.mentor.user.username }}</h6>
+                            <small class="text-muted">{{ course.mentor.expertise|default:"Expert Mentor" }}</small>
+                        </div>
+                    </div>
+                    {% if course.mentor.bio %}
+                    <p class="text-muted small mb-3">{{ course.mentor.bio|truncatewords:30 }}</p>
+                    {% endif %}
+                    <div class="row g-2 text-center">
+                        <div class="col-6">
+                            <div class="bg-light rounded p-2">
+                                <p class="fw-bold mb-0 text-primary">{{ course.mentor.experience_years }}</p>
+                                <p class="text-muted small mb-0">Years Exp.</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="bg-light rounded p-2">
+                                <p class="fw-bold mb-0 text-primary">{{ course.mentor.courses.count }}</p>
+                                <p class="text-muted small mb-0">Courses</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% if course.mentor.linkedin_url %}
+                    <a href="{{ course.mentor.linkedin_url }}" target="_blank" class="btn btn-outline-primary w-100 mt-3 btn-sm">
+                        <i class="bi bi-linkedin me-2"></i>LinkedIn Profile
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Book Session Card -->
+            <div class="card border-0 shadow-sm bg-primary text-white">
+                <div class="card-body p-4 text-center">
+                    <i class="bi bi-calendar-plus fs-1 mb-3 d-block opacity-75"></i>
+                    <h5 class="fw-bold mb-2">Book a Session</h5>
+                    <p class="small opacity-75 mb-3">Schedule a 1-on-1 session with {{ course.mentor.user.get_full_name|default:"this mentor" }}</p>
+                    <p class="fw-bold fs-4 mb-3">$99.99</p>
+                    {% if user.is_authenticated and user.is_student %}
+                        <a href="/bookings/book/{{ course.slug }}/" class="btn btn-light text-primary fw-semibold w-100">
+                            <i class="bi bi-calendar-check me-2"></i>Book Session
+                        </a>
+                    {% elif user.is_authenticated %}
+                        <p class="small opacity-75 mb-0">Only students can book sessions.</p>
+                    {% else %}
+                        <a href="/accounts/login/" class="btn btn-light text-primary fw-semibold w-100">Login to Book</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

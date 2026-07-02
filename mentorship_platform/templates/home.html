@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+
+{% block title %}MentorHub - Learn from Expert Mentors{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section text-white py-5">
+    <div class="container py-4">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <h1 class="display-4 fw-bold mb-3">Learn from the Best Mentors</h1>
+                <p class="lead mb-4 text-light opacity-75">
+                    Connect with industry experts, book 1-on-1 mentorship sessions, and accelerate your career growth with structured courses.
+                </p>
+                <div class="d-flex gap-3 flex-wrap">
+                    {% if user.is_authenticated %}
+                        <a href="/dashboards/" class="btn btn-primary btn-lg px-4">Go to Dashboard</a>
+                    {% else %}
+                        <a href="/accounts/register/" class="btn btn-primary btn-lg px-4">Get Started Free</a>
+                        <a href="/accounts/login/" class="btn btn-outline-light btn-lg px-4">Login</a>
+                    {% endif %}
+                    <a href="/courses/" class="btn btn-outline-light btn-lg px-4">Browse Courses</a>
+                </div>
+            </div>
+            <div class="col-lg-5 d-none d-lg-block text-center">
+                <img src="https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg?auto=compress&cs=tinysrgb&w=600"
+                     alt="Mentorship" class="img-fluid rounded-3 shadow-lg" style="max-height:380px;object-fit:cover;">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Bar -->
+<section class="bg-white border-bottom py-4">
+    <div class="container">
+        <div class="row text-center g-4">
+            <div class="col-6 col-md-3">
+                <h3 class="fw-bold text-primary mb-1">500+</h3>
+                <p class="text-muted small mb-0">Expert Mentors</p>
+            </div>
+            <div class="col-6 col-md-3">
+                <h3 class="fw-bold text-primary mb-1">2,000+</h3>
+                <p class="text-muted small mb-0">Students</p>
+            </div>
+            <div class="col-6 col-md-3">
+                <h3 class="fw-bold text-primary mb-1">150+</h3>
+                <p class="text-muted small mb-0">Courses</p>
+            </div>
+            <div class="col-6 col-md-3">
+                <h3 class="fw-bold text-primary mb-1">10,000+</h3>
+                <p class="text-muted small mb-0">Sessions Booked</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Courses -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold mb-1">Featured Courses</h2>
+                <p class="text-muted mb-0">Explore our top-rated mentorship programs</p>
+            </div>
+            <a href="/courses/" class="btn btn-outline-primary">View All</a>
+        </div>
+        <div class="row g-4">
+            {% for course in featured_courses %}
+            <div class="col-sm-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm course-card">
+                    {% if course.thumbnail %}
+                        <img src="{{ course.thumbnail.url }}" class="card-img-top" alt="{{ course.title }}" style="height:180px;object-fit:cover;">
+                    {% else %}
+                        <div class="card-img-top bg-primary d-flex align-items-center justify-content-center" style="height:180px;">
+                            <i class="bi bi-book-half text-white" style="font-size:3rem;"></i>
+                        </div>
+                    {% endif %}
+                    <div class="card-body d-flex flex-column">
+                        <span class="badge bg-primary-subtle text-primary mb-2">{{ course.get_category_display }}</span>
+                        <h5 class="card-title fw-semibold">{{ course.title }}</h5>
+                        <p class="card-text text-muted small flex-grow-1">{{ course.description|truncatewords:20 }}</p>
+                        <div class="d-flex align-items-center justify-content-between mt-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi bi-person-circle text-muted"></i>
+                                <small class="text-muted">{{ course.mentor.user.get_full_name|default:course.mentor.user.username }}</small>
+                            </div>
+                            <small class="text-muted"><i class="bi bi-clock me-1"></i>{{ course.duration }}</small>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 pb-3">
+                        <a href="/courses/{{ course.slug }}/" class="btn btn-primary w-100">View Course</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-4">
+                <p class="text-muted">No courses available yet. Check back soon!</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- How it Works -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">How It Works</h2>
+            <p class="text-muted">Get started in three simple steps</p>
+        </div>
+        <div class="row g-4 text-center">
+            <div class="col-md-4">
+                <div class="p-4">
+                    <div class="bg-primary-subtle rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:64px;height:64px;">
+                        <i class="bi bi-person-plus text-primary fs-3"></i>
+                    </div>
+                    <h5 class="fw-semibold">1. Create Your Account</h5>
+                    <p class="text-muted small">Sign up as a student in seconds and set up your learning profile.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-4">
+                    <div class="bg-success-subtle rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:64px;height:64px;">
+                        <i class="bi bi-search text-success fs-3"></i>
+                    </div>
+                    <h5 class="fw-semibold">2. Browse Courses</h5>
+                    <p class="text-muted small">Explore courses across various topics and find the right mentor for you.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-4">
+                    <div class="bg-warning-subtle rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:64px;height:64px;">
+                        <i class="bi bi-calendar-check text-warning fs-3"></i>
+                    </div>
+                    <h5 class="fw-semibold">3. Book a Session</h5>
+                    <p class="text-muted small">Schedule a 1-on-1 session with your chosen mentor and start learning.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

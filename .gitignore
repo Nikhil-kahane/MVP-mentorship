@@ -1,0 +1,49 @@
+node_modules
+.env
+
+# =========================
+# Environment Variables
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual Environments
+venv/
+.venv/
+env/
+
+# =========================
+# Django
+# =========================
+db.sqlite3
+staticfiles/
+media/
+
+# Logs
+*.log
+
+# =========================
+# Node.js / Vite
+# =========================
+node_modules/
+dist/
+
+# =========================
+# IDE
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+Thumbs.db

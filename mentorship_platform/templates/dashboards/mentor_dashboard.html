@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+
+{% block title %}Mentor Dashboard - MentorHub{% endblock %}
+
+{% block content %}
+<div class="bg-light border-bottom py-4">
+    <div class="container">
+        <div class="d-flex align-items-center gap-3">
+            {% if user.profile_image %}
+                <img src="{{ user.profile_image.url }}" class="rounded-circle" width="56" height="56" style="object-fit:cover;">
+            {% else %}
+                <div class="bg-success rounded-circle d-flex align-items-center justify-content-center text-white fw-bold" style="width:56px;height:56px;font-size:1.3rem;">
+                    {{ user.first_name.0|upper|default:user.username.0|upper }}
+                </div>
+            {% endif %}
+            <div>
+                <h2 class="fw-bold mb-0">Welcome, {{ user.get_full_name|default:user.username }}!</h2>
+                <p class="text-muted mb-0 small">Mentor Dashboard</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-4">
+    <div class="row g-4">
+        <!-- Sidebar -->
+        <div class="col-lg-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-3">
+                    <nav class="nav flex-column gap-1">
+                        <a href="/dashboards/mentor/" class="nav-link fw-medium text-success bg-success-subtle rounded px-3 py-2">
+                            <i class="bi bi-speedometer2 me-2"></i>Dashboard
+                        </a>
+                        <a href="#courses-section" class="nav-link text-dark px-3 py-2">
+                            <i class="bi bi-book me-2"></i>My Courses
+                        </a>
+                        <a href="#sessions-section" class="nav-link text-dark px-3 py-2">
+                            <i class="bi bi-calendar-check me-2"></i>Sessions
+                        </a>
+                        <a href="/accounts/profile/" class="nav-link text-dark px-3 py-2">
+                            <i class="bi bi-person me-2"></i>Profile
+                        </a>
+                    </nav>
+                </div>
+            </div>
+
+            {% if user.mentor_profile %}
+            <div class="card border-0 shadow-sm mt-3">
+                <div class="card-body p-3">
+                    <h6 class="fw-semibold mb-2">Expertise</h6>
+                    {% if user.mentor_profile.expertise %}
+                    <p class="small text-muted mb-1"><i class="bi bi-award me-2"></i>{{ user.mentor_profile.expertise }}</p>
+                    {% endif %}
+                    <p class="small text-muted mb-1"><i class="bi bi-briefcase me-2"></i>{{ user.mentor_profile.experience_years }} years exp.</p>
+                    <p class="small text-muted mb-0"><i class="bi bi-envelope me-2"></i>{{ user.email }}</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-lg-9">
+            <!-- Stats -->
+            <div class="row g-3 mb-4">
+                <div class="col-sm-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <p class="text-muted small mb-1">Total Bookings</p>
+                                    <h3 class="fw-bold mb-0">{{ total_bookings }}</h3>
+                                </div>
+                                <div class="bg-success-subtle rounded-circle d-flex align-items-center justify-content-center" style="width:48px;height:48px;">
+                                    <i class="bi bi-calendar-check text-success fs-5"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <p class="text-muted small mb-1">My Courses</p>
+                                    <h3 class="fw-bold mb-0">{{ courses.count }}</h3>
+                                </div>
+                                <div class="bg-primary-subtle rounded-circle d-flex align-items-center justify-content-center" style="width:48px;height:48px;">
+                                    <i class="bi bi-book text-primary fs-5"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <p class="text-muted small mb-1">Upcoming</p>
+                                    <h3 class="fw-bold mb-0">{{ upcoming_sessions.count }}</h3>
+                                </div>
+                                <div class="bg-warning-subtle rounded-circle d-flex align-items-center justify-content-center" style="width:48px;height:48px;">
+                                    <i class="bi bi-clock text-warning fs-5"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Courses -->
+            <div id="courses-section" class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-transparent border-bottom py-3">
+                    <h5 class="fw-semibold mb-0">My Courses</h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if courses %}
+                    <div class="list-group list-group-flush">
+                        {% for course in courses %}
+                        <div class="list-group-item px-4 py-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="fw-semibold mb-1">{{ course.title }}</h6>
+                                    <small class="text-muted">
+                                        <span class="badge bg-primary-subtle text-primary me-2">{{ course.get_category_display }}</span>
+                                        <i class="bi bi-clock me-1"></i>{{ course.duration }}
+                                    </small>
+                                </div>
+                                <a href="/courses/{{ course.slug }}/" class="btn btn-sm btn-outline-primary">View</a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-book text-muted" style="font-size:2.5rem;"></i>
+                        <p class="text-muted mt-2 mb-0">No courses assigned yet. Contact admin.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Upcoming Sessions -->
+            <div id="sessions-section" class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-transparent border-bottom py-3">
+                    <h5 class="fw-semibold mb-0">Upcoming Sessions</h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if upcoming_sessions %}
+                    <div class="list-group list-group-flush">
+                        {% for booking in upcoming_sessions %}
+                        <div class="list-group-item px-4 py-3">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="fw-semibold mb-1">{{ booking.course.title }}</h6>
+                                    <p class="text-muted small mb-1"><i class="bi bi-person me-1"></i>{{ booking.student.user.get_full_name|default:booking.student.user.username }}</p>
+                                    <p class="text-muted small mb-0"><i class="bi bi-calendar me-1"></i>{{ booking.session_date|date:"M d, Y g:i A" }}</p>
+                                </div>
+                                <span class="badge {% if booking.status == 'booked' %}bg-success{% elif booking.status == 'pending' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+                                    {{ booking.get_status_display }}
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-calendar-x text-muted" style="font-size:2.5rem;"></i>
+                        <p class="text-muted mt-2 mb-0">No upcoming sessions.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Recent Student Bookings -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-transparent border-bottom py-3">
+                    <h5 class="fw-semibold mb-0">Recent Student Bookings</h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if recent_bookings %}
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-4 py-3 fw-semibold">Student</th>
+                                    <th class="py-3 fw-semibold">Course</th>
+                                    <th class="py-3 fw-semibold">Session Date</th>
+                                    <th class="py-3 fw-semibold">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for booking in recent_bookings %}
+                                <tr>
+                                    <td class="ps-4 py-3">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center text-white" style="width:32px;height:32px;font-size:.8rem;">
+                                                {{ booking.student.user.first_name.0|upper|default:booking.student.user.username.0|upper }}
+                                            </div>
+                                            {{ booking.student.user.get_full_name|default:booking.student.user.username }}
+                                        </div>
+                                    </td>
+                                    <td class="py-3">{{ booking.course.title }}</td>
+                                    <td class="py-3">{{ booking.session_date|date:"M d, Y" }}</td>
+                                    <td class="py-3">
+                                        <span class="badge {% if booking.status == 'booked' %}bg-success{% elif booking.status == 'pending' %}bg-warning text-dark{% elif booking.status == 'completed' %}bg-primary{% else %}bg-secondary{% endif %}">
+                                            {{ booking.get_status_display }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <p class="text-muted">No bookings yet.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

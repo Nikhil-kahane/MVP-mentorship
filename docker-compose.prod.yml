@@ -1,0 +1,70 @@
+version: '3.9'
+
+services:
+  # Backend service (Django REST API)
+  backend:
+    build:
+      context: ./mentorship_platform
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./mentorship_platform/.env
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings.production
+      # For local Postgres container, use: POSTGRES_HOST=db
+      # For managed Postgres, set POSTGRES_HOST to your managed instance
+      POSTGRES_HOST: ${POSTGRES_HOST:-db}
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - media_data:/app/media
+      - static_data:/app/staticfiles
+    command: >
+      sh -c "python manage.py migrate --noinput &&
+             python manage.py collectstatic --noinput &&
+             gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 3 --timeout 120"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Frontend service (React + Vite)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    links:
+      - backend
+
+  # Database service (optional - remove if using managed Postgres)
+  # For managed Postgres, set POSTGRES_HOST env var to your managed instance
+  # and remove this service from depends_on in backend
+  db:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-mentorship_db}
+      POSTGRES_USER: ${POSTGRES_USER:-mentorship_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mentorship_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-mentorship_user} -d ${POSTGRES_DB:-mentorship_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  media_data:
+  static_data:

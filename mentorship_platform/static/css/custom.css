@@ -1,0 +1,110 @@
+/* Custom styles for MentorHub */
+
+body {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    color: #1a1a2e;
+    background-color: #f8f9fa;
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, #1565c0 0%, #0d47a1 60%, #01579b 100%);
+    min-height: 480px;
+    display: flex;
+    align-items: center;
+}
+
+/* Cards */
+.course-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.course-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Navbar */
+.navbar-dark .navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 500;
+    transition: color 0.2s;
+}
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: #fff;
+}
+
+/* Badges */
+.bg-primary-subtle {
+    background-color: #e3f2fd !important;
+}
+.text-primary {
+    color: #1565c0 !important;
+}
+.bg-success-subtle {
+    background-color: #e8f5e9 !important;
+}
+.bg-warning-subtle {
+    background-color: #fff8e1 !important;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: #1565c0;
+    border-color: #1565c0;
+}
+.btn-primary:hover {
+    background-color: #1251a3;
+    border-color: #1251a3;
+}
+.btn-outline-primary {
+    color: #1565c0;
+    border-color: #1565c0;
+}
+.btn-outline-primary:hover {
+    background-color: #1565c0;
+    border-color: #1565c0;
+}
+
+/* Forms */
+.form-control:focus {
+    border-color: #1565c0;
+    box-shadow: 0 0 0 0.2rem rgba(21, 101, 192, 0.15);
+}
+.form-select:focus {
+    border-color: #1565c0;
+    box-shadow: 0 0 0 0.2rem rgba(21, 101, 192, 0.15);
+}
+
+/* Sidebar nav */
+.nav-link {
+    border-radius: 6px;
+    transition: background-color 0.15s, color 0.15s;
+}
+.nav-link:hover {
+    background-color: #f0f0f0;
+}
+
+/* Table */
+.table > :not(caption) > * > * {
+    padding: 0.75rem 1rem;
+}
+
+/* Dashboard stats */
+.card {
+    border-radius: 12px;
+}
+.card-header {
+    border-radius: 12px 12px 0 0 !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-section {
+        min-height: 300px;
+        padding: 2rem 0;
+    }
+    h1.display-4 {
+        font-size: 2rem;
+    }
+}

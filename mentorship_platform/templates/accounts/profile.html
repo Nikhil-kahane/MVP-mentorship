@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile - MentorHub{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex align-items-center mb-4 gap-3">
+                {% if user.profile_image %}
+                    <img src="{{ user.profile_image.url }}" class="rounded-circle" width="64" height="64" style="object-fit:cover;">
+                {% else %}
+                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center text-white fw-bold" style="width:64px;height:64px;font-size:1.5rem;">
+                        {{ user.first_name.0|upper|default:user.username.0|upper }}
+                    </div>
+                {% endif %}
+                <div>
+                    <h2 class="fw-bold mb-0">{{ user.get_full_name|default:user.username }}</h2>
+                    <span class="badge bg-primary-subtle text-primary text-capitalize">{{ user.role }}</span>
+                </div>
+            </div>
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-transparent border-bottom py-3">
+                        <h5 class="fw-semibold mb-0"><i class="bi bi-person me-2 text-primary"></i>Personal Information</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <label class="form-label fw-medium">First Name</label>
+                                {{ user_form.first_name }}
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-label fw-medium">Last Name</label>
+                                {{ user_form.last_name }}
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-label fw-medium">Email</label>
+                                {{ user_form.email }}
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-label fw-medium">Phone Number</label>
+                                {{ user_form.phone_number }}
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-medium">Profile Image</label>
+                                {{ user_form.profile_image }}
+                                {% if user.profile_image %}
+                                    <div class="mt-2">
+                                        <img src="{{ user.profile_image.url }}" width="80" height="80" class="rounded" style="object-fit:cover;">
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if profile_form %}
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-transparent border-bottom py-3">
+                        <h5 class="fw-semibold mb-0"><i class="bi bi-info-circle me-2 text-primary"></i>
+                            {% if user.is_student %}Student Profile{% else %}Mentor Profile{% endif %}
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            {% if user.is_student %}
+                            <div class="col-12">
+                                <label class="form-label fw-medium">Bio</label>
+                                {{ profile_form.bio }}
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-medium">Education</label>
+                                {{ profile_form.education }}
+                            </div>
+                            {% else %}
+                            <div class="col-12">
+                                <label class="form-label fw-medium">Bio</label>
+                                {{ profile_form.bio }}
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-label fw-medium">Expertise</label>
+                                {{ profile_form.expertise }}
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-label fw-medium">Years of Experience</label>
+                                {{ profile_form.experience_years }}
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-medium">LinkedIn URL</label>
+                                {{ profile_form.linkedin_url }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary px-4 fw-semibold">Save Changes</button>
+                    <a href="/dashboards/" class="btn btn-outline-secondary px-4">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.card-body input, .card-body textarea, .card-body select').forEach(el => {
+    if (!el.classList.contains('form-control') && el.type !== 'file') {
+        el.classList.add('form-control');
+    }
+    if (el.type === 'file') el.classList.add('form-control');
+    if (el.type === 'number') el.classList.add('form-control');
+});
+</script>
+{% endblock %}
