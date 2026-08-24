@@ -59,7 +59,13 @@ jobs:
             
       - name: Tag Docker image
         run: docker tag mvp-frontend:test nick313/mvp-frontend:latest
+        
+        - name: Tag Docker image with commit SHA
+        run: docker tag mvp-frontend:test nick313/mvp-frontend:${{ github.sha }}
+        
       - name: push docker image
-        run: docker push nick313/mvp-frontend:latest
+        run: |
+          docker push nick313/mvp-frontend:latest
+          docker push nick313/mvp-frontend:${{ github.sha }}
         
       
