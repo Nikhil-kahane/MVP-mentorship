@@ -45,4 +45,15 @@ jobs:
       - name: build docker image 
         run: docker buildx build --load -t mvp-frontend:test .
         
+      - name: login to docker hub
+        uses: docker/login-action@v3
+        with:
+            username: ${{ secrets.DOCKERHUB_USERNAME }}
+            password: ${{ secrets.DOCKERHUB_TOKEN }}
+            
+      - name: Tag Docker image
+        run: docker tag mvp-frontend:test nick313/mvp-frontend:latest
+      - name: push docker image
+        run: docker push nick313/mvp-frontend:latest
+        
       
