@@ -18,7 +18,8 @@ services:
       - app-network
 
   frontend:
-    build: ./frontend
+    #build: ./frontend
+    image: nick313/mvp-frontend:latest
     container_name: frontend
 
     ports:
