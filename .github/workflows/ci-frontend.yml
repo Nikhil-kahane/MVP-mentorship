@@ -40,7 +40,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
         
       - name: validate dockerfile
-        run: docker Buildx build --check ./
+        run: docker build --check ./frontend
         
       - name: build docker image 
         run: docker Build -t mvp-frontend:test./frontend
