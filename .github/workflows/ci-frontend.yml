@@ -43,4 +43,4 @@ jobs:
         run: docker buildx build --check .
         
       - name: build docker image 
-        run: docker buildx build --load -t mvp-frontend:test.
+        run: docker buildx build --load -t mvp-frontend:test .
