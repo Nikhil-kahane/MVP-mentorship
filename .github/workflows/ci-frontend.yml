@@ -44,3 +44,9 @@ jobs:
         
       - name: build docker image 
         run: docker buildx build --load -t mvp-frontend:test .
+        
+      - name: Run frontend container
+        run: docker run -d --name frontend -p 8080:80 mvp-frontend:test
+
+       - name: Smoke test
+        run: curl --fail http://localhost:8080
