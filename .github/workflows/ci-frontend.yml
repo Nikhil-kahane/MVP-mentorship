@@ -43,4 +43,4 @@ jobs:
         run: docker build --check ./frontend
         
       - name: build docker image 
-        run: docker Build -t mvp-frontend:test./frontend
+        run: docker Build -t mvp-frontend:test ./frontend
