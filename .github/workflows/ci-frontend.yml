@@ -53,17 +53,19 @@ jobs:
       - name: Test
         run: npm test
         
+      - name: Build
+        run: npm run build
+        
   docker-build-scan-push:
     needs: build
     runs-on: ubuntu-latest
    
     defaults:
-    run:
-      working-directory: frontend
+       run:
+         working-directory: frontend
     
     steps:
-      - name: Build
-        run: npm run build
+      
         
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
