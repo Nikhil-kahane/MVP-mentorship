@@ -53,7 +53,7 @@ jobs:
       - name: Test
         run: npm test
         
-  docker build_scan & push:
+  docker-build-scan-push:
     needs: Frontend CI
    
     runs-on: ubuntu-latest
