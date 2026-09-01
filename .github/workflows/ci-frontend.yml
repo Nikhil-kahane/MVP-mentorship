@@ -21,7 +21,12 @@ jobs:
     defaults:
       run:
         working-directory: frontend
-
+    steps:    
+      - name: Secret detection
+        uses: gitleaks/gitleaks-action@v2
+        env:
+           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -46,6 +51,13 @@ jobs:
             
       - name: Test
         run: npm test
+        
+  docker build_scan & push:
+    needs: Frontend CI
+   
+    runs-on: ubuntu-latest
+    
+    steps:
 
       - name: Build
         run: npm run build
