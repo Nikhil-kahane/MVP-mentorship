@@ -1,0 +1,16 @@
+name: Backend CI
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - 'mentorship_platform/**'
+      - '.github/workflows/ci-backend.yml'
+
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - 'mentorship_platform/**'
+      - '.github/workflows/ci-backend.yml'
