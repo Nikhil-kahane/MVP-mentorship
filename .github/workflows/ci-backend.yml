@@ -25,6 +25,9 @@ jobs:
       run:
         working-directory: mentorship_platform
 
+    env:
+      SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
