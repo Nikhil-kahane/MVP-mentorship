@@ -43,3 +43,19 @@ jobs:
       - name: Django system check
         run: python manage.py check
 
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Django system check
+        run: python manage.py check
+
+      - name: Install Ruff
+        run: pip install ruff
+
+      - name: Ruff lint
+        run: ruff check .
+
+
+
+
