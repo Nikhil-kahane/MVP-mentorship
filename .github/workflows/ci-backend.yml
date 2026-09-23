@@ -60,6 +60,13 @@ jobs:
       - name: Run Backend Tests
         run: python manage.py test
 
+
+      - name: Check migrations
+        run: python manage.py makemigrations --check --dry-run
+
+      - name: Run migrations
+        run: python manage.py migrate --noinput
+
          
 
 
