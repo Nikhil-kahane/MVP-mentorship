@@ -37,12 +37,6 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Django system check
-        run: python manage.py check
-
 
       - name: Install dependencies
         run: pip install -r requirements.txt
