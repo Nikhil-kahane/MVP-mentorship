@@ -16,7 +16,8 @@ on:
       - 'mentorship_platform/**'
       - '.github/workflows/ci-backend.yml'
 
-
+permissions:
+  contents: read
 
 jobs:
   backend:
