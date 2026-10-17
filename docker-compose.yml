@@ -1,10 +1,9 @@
-version: "3.9"
-
 services:
-
   backend:
-    build: ./mentorship_platform
-    container_name: backend
+    #build: ./mentorship_platform
+    #container_name: backend
+    image: nick313/mvp-backend:latest
+
 
     env_file:
       - ./mentorship_platform/.env
@@ -23,7 +22,7 @@ services:
     container_name: frontend
 
     ports:
-      - "3000:3000"
+      - "3000:3000" #localohost to nginx cont. port mapping 
 
     depends_on:
       - backend
@@ -31,7 +30,7 @@ services:
     restart: unless-stopped
 
     networks:
-      - app-network
+      - app-network #for containers to talk to each other
 
 networks:
   app-network:
