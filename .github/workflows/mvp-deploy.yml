@@ -1,0 +1,33 @@
+name: Deploy to WSL2
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v3
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:mvp-cicd
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.WSL_HOST }}
+          username: ${{ secrets.WSL_USER }}
+          key: ${{ secrets.WSL_SSH_KEY }}
+          port: 22
+          script: |
+            set -e
+            cd "${{ secrets.MVP_PROJECT_DIR }}"
+            docker compose pull
+            docker compose up -d --remove-orphans
+            docker compose ps
