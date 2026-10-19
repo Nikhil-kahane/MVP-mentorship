@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Connect to Tailscale
-        uses: tailscale/github-action@v3
+        uses: tailscale/github-action@v4
         with:
           oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
           oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
@@ -21,7 +21,7 @@ jobs:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.2.2
         with:
-          host: ${{ secrets.WSL_HOST }}
+          host: ${{ secrets.WSL_HOST_TS_IP }}
           username: ${{ secrets.WSL_USER }}
           key: ${{ secrets.WSL_SSH_KEY }}
           port: 22
